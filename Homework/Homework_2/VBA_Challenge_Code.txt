@@ -1,0 +1,159 @@
+Sub GetData()
+    
+Dim CurrentSheet As Worksheet                                   'Declares a worksheet variable
+
+For Each CurrentSheet In Worksheets                             'For every worksheet in this workbook
+
+    CurrentSheet.Activate                                       'Calls for the current sheet to be used
+
+    '------------------------------------------------------------------------------------------------
+    'Grabs TickerNames, FirstTick(First tick they appear in), and LastTick (Last Tick they appear in)
+    '------------------------------------------------------------------------------------------------
+    
+    Dim ticker As String                                        'This variable is for carrying the ticker name in a for loop.
+
+    Dim LastRow As Long                                         'This variable is for finding the last row of the whole sheet.
+    
+    Dim FirstTick() As Long                                     'This is an array to carry all the numbers of the first row for each tick
+    Dim LastTick() As Long                                      'This is an array to carry all the numbers of the last row for each tick
+    Dim TickerNames() As String                                 'This is an array to carry all the ticker names
+    Dim TickCount As Long                                       'This variable counts how many ticks in total.
+    
+    Dim i As Long                                               'When I make a for loop like how I did in class, it makes an integer and it wasn't enough to carry. So I made it a long here'
+    
+    
+    LastRow = CurrentSheet.UsedRange.Rows.Count                 'Gets last row of teh whole worksheet
+    
+    TickCount = 0                                               'Initiate a starting point
+
+    ReDim Preserve FirstTick(TickCount)                         'Redimension size of FirstTick to add a spot in the array
+    FirstTick(TickCount) = 2                                    'Used the new spot to add a value of 2 for the first row of the first ticker
+    
+    '------------------------------------------------------------------------------------------------
+    'Fills out 3 arrays, TickerNames(), FirstTick(), and LastTick()
+    '------------------------------------------------------------------------------------------------
+    
+    For i = 2 To LastRow
+        
+        ticker = Cells(i, 1).Value                              'Grabs the current ticker value.
+        '------------------------------------------------------------------------------------------------------
+        If (Cells(i + 1, 1).Value <> ticker) Then               'If current ticker is different from next row ticker.
+        '------------------------------------------------------------------------------------------------------
+            ReDim Preserve LastTick(TickCount)                  'Then add one space for LastTick().
+            LastTick(TickCount) = i                             'Adds the last row for the certain Tick it is.
+        '------------------------------------------------------------------------------------------------------
+            ReDim Preserve TickerNames(TickCount)               'Adds one space for TickerNames().
+            TickerNames(TickCount) = Cells(i, 1).Value          'Adds the ticker name for this ticker.
+        '------------------------------------------------------------------------------------------------------
+            If IsEmpty(Cells(i + 1, 1).Value) = False Then      'If the next row is empty, this will help indicate when the list ends
+                                                                'and won't add an empty space for no reason.
+                ReDim Preserve FirstTick(TickCount + 1)         'Adds one space for FirstTick() to help indicate the starting row for new Ticker
+                FirstTick(TickCount + 1) = i + 1                'Remembers the row for new ticker's first row
+        '------------------------------------------------------------------------------------------------------
+            End If
+        '------------------------------------------------------------------------------------------------------
+            TickCount = TickCount + 1                           'Counts the amount of tickers saved
+            
+        End If
+
+    Next i
+
+'------------------------------------------------------------------------------------------------------
+'Creating outputs
+'------------------------------------------------------------------------------------------------------
+    Range("I1") = "Ticker"                                      'Creates the formatting required for the homework
+    Range("J1") = "Yearly Change"
+    Range("K1") = "Percent Change"
+    Range("L1") = "Total Stock Volume"
+    
+    
+    Range("P1") = "Ticker"
+    Range("Q1") = "Value"
+    Range("O2") = "Greatest % Increase"
+    Range("O3") = "Greatest % Decrease"
+    Range("O4") = "Greatest Total Volume"
+    '------------------------------------------------------------------------------------------------------
+    'Creating Variables
+    '------------------------------------------------------------------------------------------------------
+    Dim YearlyChange As Double                                  'Creates variables for each data required for the homework
+    Dim PercentChange As Double
+    Dim TotalStockVolume As Double
+        
+    Dim GreatestIncrease As Double
+    Dim GreatestDecrease As Double
+    Dim GreatestTotalVolume As Double
+    
+    GreatestIncrease = 0
+    GreatestDecrease = 0
+    GreatestTotalVolume = 0
+    
+    '------------------------------------------------------------------------------------------------
+    'Creating Data
+    '------------------------------------------------------------------------------------------------
+        
+    For i = 0 To TickCount - 1
+        Cells(i + 2, 9) = TickerNames(i)
+        '------------------------------------------------------------------------------------------------------
+        If (Cells(FirstTick(i), 3).Value <> 0) Then                                     'If the ticker has a zero value, because there's data with 0's in the data
+            YearlyChange = Cells(LastTick(i), 6).Value - Cells(FirstTick(i), 3).Value   'Calculates Yearly Change, (End of year close - start of year open)
+            PercentChange = YearlyChange / Cells(FirstTick(i), 3).Value                 'Calculates Percentage Change, (end of year close - start of year open)/(start of year open)
+        Else
+            YearlyChange = 0                                                            'If dataset is all 0s, then there's no change
+            PercentChange = 0
+        End If
+        '------------------------------------------------------------------------------------------------------
+        TotalStockVolume = 0                                                            'Starts Stock Volume at 0
+        '------------------------------------------------------------------------------------------------------
+        For j = FirstTick(i) To LastTick(i)                                             'Calculates sum of total volume for each ticker
+            TotalStockVolume = TotalStockVolume + Cells(j, 7).Value
+        Next j
+        '------------------------------------------------------------------------------------------------------
+        Cells(i + 2, 10) = YearlyChange                                                 'Inputs data into cells
+        Cells(i + 2, 11) = PercentChange
+        Cells(i + 2, 12) = TotalStockVolume
+        
+        '------------------------------------------------------------------------------------------------------
+        'Formatting Cells
+        '------------------------------------------------------------------------------------------------------
+        If (YearlyChange > 0) Then                                                      'Changes the color of the cell
+        Cells(i + 2, 10).Interior.ColorIndex = 4                                        'If positive, change to Green
+        ElseIf (YearlyChange < 0) Then
+        Cells(i + 2, 10).Interior.ColorIndex = 3                                        'If negative, change to Red
+        Else
+        Cells(i + 2, 10).Interior.ColorIndex = 2                                        'If the same, change to white
+        End If
+        '------------------------------------------------------------------------------------------------------
+        Cells(i + 2, 11).NumberFormat = "0.00%"                                         'Changes Format for Percentage Change to %
+        '------------------------------------------------------------------------------------------------------
+        If (PercentChange > GreatestIncrease) Then                                      'Finds the values of the 3 conditions required for homework
+            GreatestIncrease = PercentChange                                            'Finds Greatest Percent Increase by looking at current value
+            Range("P2") = TickerNames(i)                                                'and looking at the current greatest value, and if
+            Range("Q2") = GreatestIncrease                                              'current value > greatest value, then replace
+            Range("Q2").NumberFormat = "0.00%"                                          'greatest value = current value
+        End If
+        
+        If (PercentChange < GreatestDecrease) Then                                      'Same concept, but with decrease
+            GreatestDecrease = PercentChange                                            'If Percentage Change < Greatest Decrease
+            Range("P3") = TickerNames(i)                                                'Then Greatest Decrease = Percentage Change
+            Range("Q3") = GreatestDecrease
+            Range("Q3").NumberFormat = "0.00%"
+        End If
+        
+        If (TotalStockVolume > GreatestTotalVolume) Then                                'If Greatest Total Volume < Total Stock Volume
+            GreatestTotalVolume = TotalStockVolume                                      'Greatest Total Volume = Total Stock Volume
+            Range("P4") = TickerNames(i)
+            Range("Q4") = GreatestTotalVolume
+        End If
+        '------------------------------------------------------------------------------------------------------
+    Next i
+    
+    Columns("I:Q").AutoFit
+    
+
+        
+Next
+
+End Sub
+
+
+
