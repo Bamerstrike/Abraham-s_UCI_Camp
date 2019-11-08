@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML Homework Landing Page!</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">  
+</head>
+
+<body style="background-color: beige;">
+    <div class = "container">
+        <div class = "row" style="background-color: turquoise; padding:10px">
+            <div class = "col-lg-12 text-center">
+                <nav class="navbar navbar-default" style="margin:10px">
+                    <div class="container-fluid">
+                        
+                        <div class="navbar-header">
+                        <a class="navbar-brand" href="index.html" style="font-size: 30px; color:rgb(32, 171, 48)">WeatherPy - Abraham Ho</a>
+                        </div>
+
+                        <ul class="nav navbar-right" style="align-items: center;">
+                        
+                            <li>
+                                <div class="dropdown">
+                                    
+                                    <button class = "btn btn-primary dropdown-toggle hover" type="button" data-toggle="dropdown" style="color:white;">
+                                        Charts
+                                    </button>
+
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="MaxTemp.html">Temperature</a>
+                                        <a class="dropdown-item" href="Humidity.html">Humidity</a>
+                                        <a class="dropdown-item" href="Cloudiness.html">Cloudiness</a>
+                                        <a class="dropdown-item" href="Windspeed.html">Wind Speed</a>
+                                    </div>
+
+                                </div>
+                            </li>
+                                
+                            <li><button class="btn btn-secondary"><a href="Comparison.html" style="padding: 10px; color:white">Comparison</a></button></li>
+                            <li><button class="btn btn-secondary"><a href="Table.html" style="padding: 10px; color:white">Data</a></button></li>
+                        </ul>
+                    </div>
+                </nav> 
+            </div>
+        </div>
+
+        <div class = "row" height="20">
+            <div class = "col-lg-12" style="background-color: beige; padding:10px">
+
+            </div>
+        </div>
+
+        <div class = "row">
+
+            <div class = "col-lg-7" style = "background-color:bisque">
+                <p style="font-size:20px; margin-top:20px"><img src="Resources/assets/images/Fig1.png" alt="Temperature vs Latitude" height="300" width="300" style="float:left; padding:15px;" >
+                    This website is to showcase the work produced in the API assignment. You will see 4 different graphs comparing Temperature, Cloudiness, Humidity, and Wind Speed.</p>
+            </div>
+
+            <div class = "col-lg-5" style = "background-color:rgb(194, 161, 120); padding:20px;" >
+                <p>Select one for more details!</p>
+                <a href="MaxTemp.html"><img src ="Resources/assets/images/Fig1.png" alt = "Temperature vs Latitude" height="200" width = "200" style = "padding:20px;"></a>
+                <a href="Humidity.html"><img src ="Resources/assets/images/Fig2.png" alt = "Humdiity vs Latitude"  height="200" width = "200" style = "padding:20px;"></a>
+                <a href="Cloudiness.html"><img src ="Resources/assets/images/Fig3.png" alt = "Cloudiness vs Latitude"  height="200" width = "200" style = "padding:20px;"></a>
+                <a href="Windspeed.html"><img src ="Resources/assets/images/Fig4.png" alt = "Wind Speed vs Latitude"  height="200" width = "200" style = "padding:20px;"></a>
+            </div>  
+
+        </div>           
+    </div>
+</body>
