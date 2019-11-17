@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Mars bars</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body style="background-color:rgb(147, 104, 24)">
+  <div class="container">
+      <div class="jumbotron text-align" {% if Mars_Info  %} style="background-image:url({{Mars_Info.URL5.1.img_url}})" {%endif%}>
+          <h1 {% if Mars_Info  %} style="color:rgb(3, 74, 3)" {%endif%} >Mars Information</h1>
+          <p><a class="btn btn-primary btn-lg" href="/scrape" role="button">Click Here to Scrape Mars</a></p>
+        </div>
+
+    {% if Mars_Info  %}
+
+    <div class="row">
+      <div class="col-md-6">
+          <!-- https://github.com/zhaoterryy/mkdocs-git-revision-date-plugin/issues/1 -->
+          <!-- Had an issue where it would give me undefined error if I looked too deep into the DB-->
+          <!-- This if statement helps me not render html if I haven't scraped yet. -->
+
+          <h1>Mars News</h1>        
+          <p><h3>Recent Article: {{Mars_Info.URL1.0}}</h3></p>
+          <p>Preview: {{Mars_Info.URL1.1}}</p>
+         
+      </div>
+
+
+      <div class = "col-md-6">
+        <h1>Mars Information</h1>
+        <table border="1", style="background-color:whitesmoke">
+        {% for Info in Mars_Info.URL4 %}
+        <tr> 
+          <td>{{ Info.0 }}</td>
+          <td style="text-align:center" width = 200px> {{ Info.1 }}</td>
+        </tr>
+        {% endfor %}
+        </table>
+      </div>
+    </div>
+
+    <div class = "row", style="padding-top:30px">
+      <div class = "col-md-6">
+        <h1>Featured Mars Image</h1>
+          <img alt={{Mars_Info.URL2.0}} src={{Mars_Info.URL2.0}} class="img-responsive" >
+      </div>
+      <div class = "col-md-6">
+        <h1>Temperature:</h1>
+        <p>{{Mars_Info.URL3}}</p>
+      </div>
+    </div>
+
+    <div class = "row">
+      <div class = "col-md-12; text-center">
+        <h1>Mars Hemispheres</h1>
+
+        {% for pictures in Mars_Info.URL5 %}
+        <img src={{pictures.img_url}} alt = {{pictures.title}} width="500" height="500">
+        {% endfor %}
+
+      </div>
+    </div>
+
+
+
+
+
+
+      {% endif %}
+    </div>
+
+  </div>
+</body>
+
+</html>
+
