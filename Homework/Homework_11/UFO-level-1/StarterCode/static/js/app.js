@@ -11,7 +11,7 @@ var tbody = d3.select("tbody");
 
 // On click event on the button, do...
 button.on("click",function() {
-
+    d3.event.preventDefault();
     // Grab input object from input box with the id "datetime"
     var input = d3.select("#datetime");
     // Grab the text value from the object input
@@ -35,5 +35,4 @@ button.on("click",function() {
             newCell.text(value);
         });
     });
-
 });

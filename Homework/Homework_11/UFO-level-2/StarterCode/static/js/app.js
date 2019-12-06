@@ -12,6 +12,8 @@ var tbody = d3.select("tbody");
 // On click event on the button, do...
 button.on("click",function() {
 
+    d3.event.preventDefault();
+
     // Grab input object from input box and take them in as values
     var dateInput = d3.select("#datetime").property("value");
     var cityInput = d3.select("#city").property("value");
