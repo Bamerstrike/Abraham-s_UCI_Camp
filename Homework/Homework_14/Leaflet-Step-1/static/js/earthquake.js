@@ -1,8 +1,10 @@
+// Create a map object
 var USMap = L.map("map", {
   center: [37.0902, -95.7129],
   zoom: 4
 });
 
+// Create a layer for hte maps to load
 L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}", {
   attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, Imagery © <a href='https://www.mapbox.com/'>Mapbox</a>",
   maxZoom: 18,
@@ -10,31 +12,29 @@ L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={
   accessToken: API_KEY
 }).addTo(USMap);
 
-// var url = "https://data.sfgov.org/resource/cuks-n6tp.json?$limit=10000";
+// insert the link where the json is linked
 var url = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_month.geojson";
 
+// read the json
 d3.json(url, function(response) {
-  console.log(response.features[1])
-
+  // create a variable to carry the location
   var locations;
 
-
+  // for every line in the json, make a circle and change the size and color dependant on magnitude
   for(i=0; i<response.features.length; i++){
     locations = response.features[i].geometry.coordinates;
     coordinates = [locations[1],locations[0]];
     Magnitude = response.features[i].properties.mag;
-    
+    // creates the circle
     var circle = L.circle(coordinates,{
         color:getColor(Magnitude),
         fillColor:getColor(Magnitude),
         fillOpacity:"0.5",
-        radius:getRadius(Magnitude),
-        Magnitude:Magnitude,
-        Place: coordinates
+        radius:getRadius(Magnitude)
       }).bindPopup("Magnitude:"+Magnitude).addTo(USMap);    
   }
 
-
+  // creates the legend on the bottom right of the map
   var legend = L.control({position:"bottomright"});
   legend.onAdd = function(map){
     var div = L.DomUtil.create("div","legend");
@@ -46,11 +46,11 @@ d3.json(url, function(response) {
     }
     return div;
   }
-
+  // add to map
   legend.addTo(USMap);
 });
 
-
+// function to get color changes depending on magnitude
 function getColor(Magnitude)
 {
   if(Magnitude>9){
@@ -85,6 +85,7 @@ function getColor(Magnitude)
   }    
 }
 
+// function to change radius depending on magnitude
 function getRadius(Magnitude){
   if(Magnitude>9){
     return 90000 + (Magnitude*1000);
